@@ -1,0 +1,12 @@
+{
+  // Preview renderer as a Worker (Spike 0.2). Built by `astro build --config astro.preview.worker.config.mjs`.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "aicms-preview-spike",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2026-11-01",
+  // In production also add "global_fetch_strictly_public" (the content API is reached through a public tunnel
+  // hostname). It's left off here because the local CMS mock is on 127.0.0.1.
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "binding": "ASSETS", "directory": "./.preview-worker/client" },
+  "vars": { "AICMS_CONTENT_API": "http://127.0.0.1:5050/internal/sites/clinics/content" }
+}

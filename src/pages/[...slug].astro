@@ -1,0 +1,46 @@
+---
+// Catch-all renderer, used in two modes:
+//  - static build (astro.config.mjs): one HTML file per content/pages/**/page.json, rendered at build time
+//  - preview renderer (astro.preview.config.mjs): rendered per request, content fetched from the platform
+//    for the changeset in ?cs= (remembered in a cookie so links inside the preview keep working)
+import Base from "../layouts/Base.astro";
+import { registry } from "../components/registry";
+import { loadPages, loadPreviewPage, type Page } from "../lib/content";
+
+export function getStaticPaths() {
+  return loadPages().map((page) => ({ params: { slug: page.path || undefined }, props: { page } }));
+}
+
+let page = (Astro.props as { page?: Page }).page;
+let note: string | undefined;
+
+if (!page) {
+  const fromQuery = (name: string, cookie: string) => {
+    const q = Astro.url.searchParams.get(name);
+    if (q) Astro.cookies.set(cookie, q, { path: "/", httpOnly: true, sameSite: "lax" });
+    return q ?? Astro.cookies.get(cookie)?.value;
+  };
+  const changeset = fromQuery("cs", "aicms_cs") ?? "main";
+  const token = fromQuery("pt", "aicms_pt") ?? "";
+  const segment = fromQuery("seg", "aicms_seg");
+  (Astro.locals as any).segment = segment && segment !== "default" ? segment : undefined;
+  // The middleware copies these onto internal links, so navigation inside the preview works without cookies
+  // (in production the preview is on a different domain from the CMS, where iframe cookies are often blocked).
+  Object.assign(Astro.locals as any, { previewCs: changeset, previewToken: token, previewSeg: segment });
+
+  const result = await loadPreviewPage(Astro.params.slug ?? "", changeset, token);
+  if (!result.page) {
+    return new Response(`Preview error (${result.status}):\n${(result.errors ?? []).join("\n")}`, {
+      status: result.status, headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  }
+  page = result.page;
+  note = `Preview · ${changeset === "main" ? "main" : `changeset ${changeset}`}${(Astro.locals as any).segment ? ` · segment ${(Astro.locals as any).segment}` : ""}`;
+}
+---
+<Base title={page.title} description={page.seo?.description} note={note}>
+  {page.sections.map((section) => {
+    const Component = registry[section.component];
+    return <Component section={section} />;
+  })}
+</Base>

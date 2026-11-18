@@ -1,0 +1,20 @@
+---
+import { slot, text, type Section } from "../lib/content";
+interface Props { section: Section }
+const { section } = Astro.props;
+const seg = (Astro.locals as any).segment;
+const [heading, label] = ["heading", "label"].map((p) => text(section, p, seg));
+const { href } = section.props;
+---
+<section class="cta">
+  <h2 {...slot(section, "heading")}>{heading}</h2>
+  <a href={href} {...slot(section, "label")}>{label}</a>
+</section>
+
+<style>
+  .cta { display: flex; gap: var(--space-lg); align-items: center; justify-content: space-between; flex-wrap: wrap;
+         border: 2px solid var(--color-accent); padding: var(--space-lg); border-radius: var(--radius-md); margin-block: var(--space-xl); }
+  h2 { margin: 0; font-family: var(--font-heading); }
+  a { background: var(--color-accent); color: var(--color-primary-contrast); padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-md); text-decoration: none; font-weight: 600; }
+</style>

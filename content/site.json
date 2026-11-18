@@ -1,0 +1,9 @@
+{
+  "name": "Contoso Clinics (demo)",
+  "nav": [
+    { "label": "Home", "href": "/" },
+    { "label": "Services", "href": "/services/" },
+    { "label": "Members", "href": "/members/" }
+  ],
+  "gated": ["/members"]
+}

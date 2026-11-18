@@ -1,0 +1,33 @@
+---
+// Island (tier 2a): per-user data. The page HTML is identical for everyone; user data only comes from /api/me.
+import type { Section } from "../lib/content";
+interface Props { section: Section }
+---
+<section class="account" data-island="account">
+  <div class="body"><p class="muted">Loading your account…</p></div>
+  <form method="post" action="/api/logout"><button type="submit">Sign out</button></form>
+</section>
+
+<script>
+  for (const el of document.querySelectorAll<HTMLElement>("[data-island=account]")) {
+    const body = el.querySelector(".body")!;
+    fetch("/api/me", { credentials: "same-origin" })
+      .then(async (res) => {
+        if (res.status === 401) { location.href = "/login/?next=" + encodeURIComponent(location.pathname); return; }
+        const me: { name: string; plan: string; appointments: { when: string; what: string }[] } = await res.json();
+        const h = Object.assign(document.createElement("h2"), { textContent: `Hi ${me.name}` });
+        const plan = Object.assign(document.createElement("p"), { textContent: `Plan: ${me.plan}` });
+        const ul = document.createElement("ul");
+        for (const a of me.appointments) ul.append(Object.assign(document.createElement("li"), { textContent: `${a.when}: ${a.what}` }));
+        body.replaceChildren(h, plan, ul);
+      })
+      .catch(() => body.replaceChildren(Object.assign(document.createElement("p"), { textContent: "Couldn't load your account." })));
+  }
+</script>
+
+<style>
+  .account { background: var(--color-surface-alt); padding: var(--space-lg); border-radius: var(--radius-md); margin-block: var(--space-lg); }
+  .body { min-height: 9rem; }
+  .muted { color: var(--color-muted); }
+  button { background: var(--color-text); color: var(--color-surface); border: 0; padding: var(--space-sm) var(--space-md); border-radius: var(--radius-md); cursor: pointer; }
+</style>

@@ -1,0 +1,4 @@
+# Applies to assets served directly by Workers Static Assets (the Worker isn't invoked for these).
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff

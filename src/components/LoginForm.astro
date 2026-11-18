@@ -1,0 +1,30 @@
+---
+// Plain HTML form, no JS. In the real product this would start an OIDC redirect to the customer's IdP.
+import type { Section } from "../lib/content";
+interface Props { section: Section }
+const { heading } = Astro.props.section.props;
+---
+<section class="login">
+  <h1>{heading}</h1>
+  <form method="post" action="/api/login">
+    <label>Name <input name="name" required maxlength="40" autocomplete="name" /></label>
+    <input type="hidden" name="next" value="/members/" data-next />
+    <button type="submit">Sign in (demo)</button>
+  </form>
+  <p class="note">Demo only: any name signs you in. Production uses the customer's IdP (OIDC).</p>
+</section>
+
+<script>
+  // Carry ?next= through to the form (progressive enhancement; works without JS too).
+  const next = new URLSearchParams(location.search).get("next");
+  if (next) document.querySelectorAll<HTMLInputElement>("[data-next]").forEach((i) => (i.value = next));
+</script>
+
+<style>
+  .login { max-width: 28rem; margin: var(--space-xl) auto; }
+  h1 { font-family: var(--font-heading); }
+  form { display: grid; gap: var(--space-md); }
+  input { display: block; width: 100%; padding: var(--space-sm); margin-top: var(--space-sm); box-sizing: border-box; }
+  button { background: var(--color-primary); color: var(--color-primary-contrast); border: 0; padding: var(--space-sm) var(--space-md); border-radius: var(--radius-md); cursor: pointer; }
+  .note { color: var(--color-muted); font-size: 0.9em; }
+</style>

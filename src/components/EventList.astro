@@ -1,0 +1,50 @@
+---
+// Island (tier 1): static shell with reserved height, data fetched from the site Worker's /api.
+import type { Section } from "../lib/content";
+interface Props { section: Section }
+const { heading } = Astro.props.section.props;
+---
+<section class="events" data-island="events">
+  <h2>{heading}</h2>
+  <ul aria-live="polite"><li class="skeleton">Loading events…</li></ul>
+</section>
+
+<script>
+  for (const el of document.querySelectorAll<HTMLElement>("[data-island=events]")) {
+    const list = el.querySelector("ul")!;
+    const load = async () => {
+      try {
+        const res = await fetch("/api/events");
+        if (!res.ok) throw new Error(String(res.status));
+        const events: { id: string; title: string; date: string }[] = await res.json();
+        list.replaceChildren(
+          ...events.map((e) => {
+            const li = document.createElement("li");
+            const date = document.createElement("time");
+            date.dateTime = e.date;
+            date.textContent = new Date(e.date).toLocaleDateString(undefined, { day: "numeric", month: "short" });
+            li.append(date, " ", e.title);
+            return li;
+          }),
+        );
+      } catch {
+        list.replaceChildren(Object.assign(document.createElement("li"), { textContent: "Events are unavailable right now." }));
+      }
+    };
+    // Hydrate when visible (equivalent of client:visible)
+    new IntersectionObserver((entries, obs) => {
+      if (entries.some((e) => e.isIntersecting)) { obs.disconnect(); load(); }
+    }).observe(el);
+  }
+</script>
+
+<style>
+  .events { margin-block: var(--space-xl); }
+  h2 { font-family: var(--font-heading); }
+  ul { list-style: none; padding: 0; min-height: 7.5rem; } /* reserved height: no layout shift when data arrives */
+  li { padding: var(--space-sm) 0; border-bottom: 1px solid var(--color-surface-alt); }
+  .skeleton { color: var(--color-muted); }
+</style>
+<style is:global>
+  [data-island="events"] time { display: inline-block; min-width: 4rem; font-weight: 600; color: var(--color-accent); }
+</style>

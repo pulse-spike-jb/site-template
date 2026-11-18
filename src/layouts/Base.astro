@@ -1,0 +1,35 @@
+---
+import "../styles/tokens.css";
+import site from "../../content/site.json";
+interface Props { title: string; description?: string; note?: string }
+const { title, description, note } = Astro.props;
+const release = process.env.GIT_SHA ?? "dev";
+const builtAt = new Date().toISOString().replace("T", " ").slice(0, 19) + "Z";
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · {site.name}</title>
+    {description && <meta name="description" content={description} />}
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/">{site.name}</a>
+      <nav>{site.nav.map((n) => <a href={n.href}>{n.label}</a>)}</nav>
+    </header>
+    <main><slot /></main>
+    <footer>{note ?? <>Release <code>{release}</code> · built {builtAt}</>}</footer>
+  </body>
+</html>
+
+<style is:global>
+  body { margin: 0; font-family: var(--font-body); color: var(--color-text); background: var(--color-surface); line-height: 1.5; }
+  header, main, footer { max-width: 64rem; margin: 0 auto; padding: 0 var(--space-md); }
+  header { display: flex; justify-content: space-between; align-items: center; padding-block: var(--space-md); flex-wrap: wrap; gap: var(--space-md); }
+  .brand { font-family: var(--font-heading); font-weight: 700; color: var(--color-text); text-decoration: none; }
+  nav { display: flex; gap: var(--space-md); }
+  nav a { color: var(--color-primary); }
+  footer { color: var(--color-muted); padding-block: var(--space-lg); font-size: 0.85em; }
+</style>

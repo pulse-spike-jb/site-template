@@ -1,0 +1,4 @@
+[
+  { "id": "healthcare", "label": "Healthcare professionals", "match": { "campaign": ["health-pros"] } },
+  { "id": "uk", "label": "UK visitors", "match": { "country": ["GB"] } }
+]

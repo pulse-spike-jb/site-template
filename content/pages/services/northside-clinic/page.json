@@ -1,0 +1,18 @@
+{
+  "id": "pg_northside_clinic_mwcoduep1",
+  "title": "Northside clinic",
+  "seo": {
+    "description": "Northside clinic"
+  },
+  "sections": [
+    {
+      "id": "sec_northside_clinic_hero_mwcoduep2",
+      "component": "Hero",
+      "props": {
+        "heading": "Northside clinic",
+        "subheading": "Find out more about Northside clinic.",
+        "tone": "surface"
+      }
+    }
+  ]
+}

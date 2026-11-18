@@ -1,0 +1,17 @@
+{
+  "id": "pg_members",
+  "title": "Members",
+  "seo": { "description": "Members area" },
+  "sections": [
+    {
+      "id": "sec_members_hero",
+      "component": "Hero",
+      "props": {
+        "heading": "Members area",
+        "subheading": "This page is static HTML, gated by the site Worker. Your details below come from /api/me.",
+        "tone": "surface"
+      }
+    },
+    { "id": "sec_members_account", "component": "AccountPanel", "props": {} }
+  ]
+}

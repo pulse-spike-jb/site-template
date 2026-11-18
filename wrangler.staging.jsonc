@@ -1,0 +1,15 @@
+{
+  // Local "Staging" environment: same Worker, different asset folder, embeddable by the CMS preview pane.
+  // On Cloudflare this is simply the uploaded-but-not-deployed Worker version (preview URL).
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "aicms-astro-head-spike-staging",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./.staging",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/*", "!/_astro/*"]
+  },
+  "vars": { "FRAME_ANCESTORS": "http://127.0.0.1:5050 http://localhost:5050" }
+}

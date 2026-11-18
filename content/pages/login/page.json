@@ -1,0 +1,8 @@
+{
+  "id": "pg_login",
+  "title": "Sign in",
+  "seo": { "description": "Sign in" },
+  "sections": [
+    { "id": "sec_login_form", "component": "LoginForm", "props": { "heading": "Sign in to the members area" } }
+  ]
+}

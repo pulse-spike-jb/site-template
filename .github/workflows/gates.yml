@@ -1,0 +1,41 @@
+# Platform gates for a site repo (CLAUDE.md §11.4, §13.3 #1).
+# Runs on the short-lived changeset branch the platform pushes at Apply. Holds NO secrets: the job can only read the
+# repo and sign a build provenance attestation (OIDC). The platform verifies the attestation, then merges and deploys.
+name: gates
+on:
+  push:
+    branches: ["cs/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write      # OIDC for the attestation signature
+  attestations: write
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install (no lifecycle scripts)
+        run: npm ci --ignore-scripts
+      - name: Build (schema validation + astro build)
+        run: npm run build
+      - name: Package artefact
+        run: tar -czf site.tar.gz -C dist .
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: site.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: site.tar.gz
+          retention-days: 7

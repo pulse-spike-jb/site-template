@@ -1,0 +1,39 @@
+{
+  "id": "pg_services",
+  "title": "Services",
+  "seo": {
+    "description": "Clinic services"
+  },
+  "sections": [
+    {
+      "id": "sec_services_hero",
+      "component": "Hero",
+      "props": {
+        "heading": "Our services",
+        "subheading": "General practice, diagnostics and specialist referrals!",
+        "tone": "primary"
+      }
+    },
+    {
+      "id": "sec_services_grid",
+      "component": "FeatureGrid",
+      "props": {
+        "heading": "What we offer",
+        "items": [
+          {
+            "title": "General practice",
+            "body": "Routine and urgent appointments."
+          },
+          {
+            "title": "Diagnostics",
+            "body": "Bloods, imaging and ECG on site."
+          },
+          {
+            "title": "Specialists",
+            "body": "Dermatology, cardiology and physiotherapy."
+          }
+        ]
+      }
+    }
+  ]
+}

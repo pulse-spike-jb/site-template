@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.releases/
+.astro/
+.wrangler/
+.dev.vars
+src/styles/tokens.css
+.cms/
+.staging/
+.preview/
+.preview-worker/

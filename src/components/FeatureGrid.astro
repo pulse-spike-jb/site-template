@@ -1,0 +1,25 @@
+---
+import type { Section } from "../lib/content";
+interface Props { section: Section }
+const { heading, items } = Astro.props.section.props;
+---
+<section class="grid-wrap">
+  <h2>{heading}</h2>
+  <div class="grid">
+    {items.map((item: { title: string; body: string }) => (
+      <article class="card">
+        <h3>{item.title}</h3>
+        <p>{item.body}</p>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .grid-wrap { margin-block: var(--space-xl); }
+  h2 { font-family: var(--font-heading); }
+  .grid { display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+  .card { background: var(--color-surface-alt); padding: var(--space-lg); border-radius: var(--radius-md); }
+  h3 { margin-top: 0; color: var(--color-accent); }
+  p { color: var(--color-muted); margin-bottom: 0; }
+</style>

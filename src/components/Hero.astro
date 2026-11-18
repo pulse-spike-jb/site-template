@@ -1,0 +1,23 @@
+---
+import { slot, text, type Section } from "../lib/content";
+interface Props { section: Section }
+const { section } = Astro.props;
+const seg = (Astro.locals as any).segment;
+const [heading, subheading, ctaLabel] = ["heading", "subheading", "ctaLabel"].map((p) => text(section, p, seg));
+const { ctaHref, tone } = section.props;
+---
+<section class:list={["hero", `tone-${tone}`]}>
+  <h1 {...slot(section, "heading")}>{heading}</h1>
+  {subheading && <p class="sub" {...slot(section, "subheading")}>{subheading}</p>}
+  {ctaLabel && ctaHref && <a class="btn" href={ctaHref} {...slot(section, "ctaLabel")}>{ctaLabel}</a>}
+</section>
+
+<style>
+  .hero { padding: var(--space-xl) var(--space-lg); border-radius: var(--radius-md); margin-block: var(--space-lg); }
+  .tone-primary { background: var(--color-primary); color: var(--color-primary-contrast); }
+  .tone-surface { background: var(--color-surface-alt); color: var(--color-text); }
+  h1 { font-family: var(--font-heading); margin: 0 0 var(--space-md); }
+  .sub { margin: 0 0 var(--space-lg); }
+  .btn { display: inline-block; padding: var(--space-sm) var(--space-md); border-radius: var(--radius-md);
+         background: var(--color-primary-contrast); color: var(--color-primary); font-weight: 600; text-decoration: none; }
+</style>

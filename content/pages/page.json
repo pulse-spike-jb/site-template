@@ -1,0 +1,76 @@
+{
+  "id": "pg_home",
+  "title": "Home",
+  "seo": {
+    "description": "Contoso Clinics demo home page"
+  },
+  "sections": [
+    {
+      "id": "sec_home_hero",
+      "name": "Home hero",
+      "component": "Hero",
+      "props": {
+        "heading": "Book same-day appointments",
+        "subheading": "Same-week appointments across 12 clinics.",
+        "ctaLabel": "Book an appointment",
+        "ctaHref": "/services/",
+        "tone": "primary"
+      },
+      "personalise": {
+        "healthcare": {
+          "heading": "Referrals made simple",
+          "ctaLabel": "Start a referral"
+        },
+        "uk": {
+          "subheading": "Same-week appointments across 12 UK clinics."
+        }
+      }
+    },
+    {
+      "id": "sec_home_features",
+      "component": "FeatureGrid",
+      "props": {
+        "heading": "Why Contoso",
+        "items": [
+          {
+            "title": "Fast",
+            "body": "Most patients are seen within five working days."
+          },
+          {
+            "title": "Local",
+            "body": "Twelve clinics, all within 20 minutes of public transport."
+          },
+          {
+            "title": "Connected",
+            "body": "Results go straight to your GP."
+          }
+        ]
+      }
+    },
+    {
+      "id": "sec_home_events",
+      "component": "EventList",
+      "props": {
+        "heading": "Upcoming events"
+      }
+    },
+    {
+      "id": "sec_home_cta",
+      "component": "CTA",
+      "props": {
+        "heading": "Already a member?",
+        "label": "Go to your account",
+        "href": "/members/"
+      }
+    },
+    {
+      "id": "sec_cta_mwcrghex2",
+      "component": "CTA",
+      "props": {
+        "heading": "Questions about billing?",
+        "label": "Talk to us",
+        "href": "/services/"
+      }
+    }
+  ]
+}
