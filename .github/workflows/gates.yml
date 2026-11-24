@@ -7,15 +7,14 @@ on:
     branches: ["cs/**"]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  id-token: write      # OIDC for the attestation signature
-  attestations: write
+permissions: {}
 
 jobs:
-  gates:
+  build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,16 +25,31 @@ jobs:
           cache: npm
       - name: Install (no lifecycle scripts)
         run: npm ci --ignore-scripts
+      - name: Probe build-job credential isolation
+        run: node scripts/isolation-probe.mjs
       - name: Build (schema validation + astro build)
         run: npm run build
       - name: Package artefact
         run: tar -czf site.tar.gz -C dist .
-      - name: Attest build provenance
-        uses: actions/attest-build-provenance@v2
-        with:
-          subject-path: site.tar.gz
       - uses: actions/upload-artifact@v4
         with:
           name: site
           path: site.tar.gz
           retention-days: 7
+
+  attest:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: site.tar.gz
